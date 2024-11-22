@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { getUsers, deleteUser } from "./hooks/apiMethods";
 import UserList from "./components/UserList";
 import FilterBox from "./components/FilterBox";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setFilteredUsers(users);
-  }, [users]);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -33,17 +29,16 @@ function App() {
     }
   };
 
-  const handleFilter = (searchText) => {
-    const lowerSearchText = searchText.toLowerCase();
-    setFilteredUsers(
-      users.filter(
-        (user) =>
-          user.first_name.toLowerCase().includes(lowerSearchText) ||
-          user.last_name.toLowerCase().includes(lowerSearchText) ||
-          user.email.toLowerCase().includes(lowerSearchText)
-      )
-    );
+  const handleFilter = (text) => {
+    setSearchText(text.toLowerCase());
   };
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.first_name.toLowerCase().includes(searchText) ||
+      user.last_name.toLowerCase().includes(searchText) ||
+      user.email.toLowerCase().includes(searchText)
+  );
 
   return (
     <div className="App">
