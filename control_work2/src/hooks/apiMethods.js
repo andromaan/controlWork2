@@ -14,7 +14,7 @@ const baseUrl = "https://reqres.in/api";
 
 export const getUsers = async () => {
   const response = await axios.get(`${baseUrl}/users?page=1`);
-  return response.data.data; // Returns the array of users
+  return response.data.data;
 };
 
 export const deleteUser = async (id) => {

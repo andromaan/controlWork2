@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getUsers, deleteUser } from "./apiMethods";
-import UserList from "./UserList";
-import FilterBox from "./FilterBox";
+import { getUsers, deleteUser } from "./hooks/apiMethods";
+import UserList from "./components/UserList";
+import FilterBox from "./components/FilterBox";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -9,7 +9,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setFilteredUsers(users); // Initialize filtered users
+    setFilteredUsers(users);
   }, [users]);
 
   const fetchUsers = async () => {
@@ -34,9 +34,13 @@ function App() {
   };
 
   const handleFilter = (searchText) => {
+    const lowerSearchText = searchText.toLowerCase();
     setFilteredUsers(
-      users.filter((user) =>
-        user.first_name.toLowerCase().includes(searchText.toLowerCase())
+      users.filter(
+        (user) =>
+          user.first_name.toLowerCase().includes(lowerSearchText) ||
+          user.last_name.toLowerCase().includes(lowerSearchText) ||
+          user.email.toLowerCase().includes(lowerSearchText)
       )
     );
   };
@@ -44,10 +48,17 @@ function App() {
   return (
     <div className="App">
       <h2>Users from API:</h2>
-      <button onClick={fetchUsers} disabled={loading}>
-        {loading ? "Loading..." : "Fetch Users"}
-      </button>
-      <FilterBox onFilter={handleFilter} />
+      <div className="d-flex align-items-center gap-3 mb-3">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={fetchUsers}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Fetch Users"}
+        </button>
+        <FilterBox onFilter={handleFilter} />
+      </div>
       <UserList users={filteredUsers} onDelete={handleDelete} />
     </div>
   );
